@@ -1,0 +1,66 @@
+#注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8888/eureka/
+
+spring:
+  myval: 123
+
+#################################################
+# Feign配置
+# Feign开启降级服务；启动类无需hystrix注解；写降级类组件，实现feign业务接口即可
+#################################################
+feign:
+  httpclient:
+    enabled: false
+    connection-timeout: 6000
+    max-connections: 2000
+    max-connections-per-route: 2000
+  okhttp:
+    enabled: true
+  hystrix:
+    enabled: true
+  compression:
+    response: true
+    request:
+      enabled: true
+      mime-types: text/xml,application/xml,application/json
+      min-request-size: 2048
+  client:
+    config:
+      default:
+        connectTimeout: 6000
+        readTimeout: 6000
+#################################################
+# 超时配置
+# Feign+Ribbon 超时设置，默认已启用客户端负载ribbon;设置ribbon超时时间有效，其他配置无效
+# timeoutInMilliseconds > (ribbonReadTimeout + ribbonConnectTimeout) * (maxAutoRetries + 1) * (maxAutoRetriesNextServer + 1);
+#################################################
+ribbon:
+  ReadTimeout: 6000
+  ConnectTimeout: 6000
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000
+      circuitBreaker:
+        requestVolumeThreshold: 5
+  threadpool:
+    default:
+      #核心线程数
+      coreSize: 200
+      #最大线程数
+      maximumSize: 300
+      #是否让maximumSize生效，false则只有coreSize会生效
+      allowMaximumSizeToDivergeFromCoreSize: true
+      #线程池的队列大小，-1代表使用SynchronousQueue队列
+      maxQueueSize: 600
+      #即使maxQueueSize没有达到，达到queueSizeRejectionThreshold该值后，请求也会被拒绝，默认值5
+      queueSizeRejectionThreshold: 5000
