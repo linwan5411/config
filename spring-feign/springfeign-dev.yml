@@ -5,7 +5,7 @@ eureka:
       defaultZone: http://localhost:8888/eureka/
 
 spring:
-  myval: 123456
+  myval: 56789
 
 #################################################
 # Feign配置
